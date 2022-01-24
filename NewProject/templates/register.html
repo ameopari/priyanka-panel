@@ -1,0 +1,144 @@
+{% extends 'header.html' %}
+
+{% block content %}
+
+<body>
+    {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} text-center" role="alert">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="container mt-4 p-3">
+      <form method="POST">
+        {% csrf_token %}
+        <h5 class="text-center text-muted">Register Here!</h5>
+        <div class="form-group">   
+          <label for="username"><b>Username</b></label>
+          <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username">
+          <span class="username_error" style="display: none;">Enter username</span>
+        </div>
+
+      
+      <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" autocomplete="off" required>
+      <span class="email_error" style="display:none;">Enter Email</span>
+    </div>
+
+      <div class="form-group">
+        <label for="psw"><b>Password</b></label>
+        <input type="password" id="password" class="form-control" placeholder="Enter Password" name="password">
+        <span class="password_error" style="display: none;">Enter Password</span>
+        <span class="password_length" style="display: none;">password should be more than 8</span>
+      </div>
+
+      <div class="form-group">  
+        <label for="psw-repeat"><b>Repeat Password</b></label>
+        <input type="password" id="repeatPassword" class="form-control" placeholder="Repeat Password" id="re_password" name="password1">
+        <span class="re_password" style="display: none;">Password doesnt match</span>
+      </div>
+
+      <button type="button" class="register btn btn-success mt-4 ">Register</button>
+      <small class="mt-5 mx-4 p-2"> Already have accout! <a class="mt-5 mx-4 p-2" href="{% url 'login' %}">Login</a> </small>
+    </form>
+  </div>
+  
+</body>
+</html>
+
+
+<script>
+  
+  console.log($('#loginForm').find('div:first'),'================hget_digit')
+     $('.register').click(function(e){
+      e.preventDefault()
+      let submit = true;
+      if($('#username').val() == ''){
+        $('.username_error').css('display','block');
+        submit = false;
+      }
+      else{
+        $('.username_error').css('display','none');
+        submit = true;
+      }
+
+      if($('#email').val() == ''){
+        $('.email_error').css('display','block');
+        console.log("email field data")
+        submit = false;
+      }
+      else{
+          $('.email_error').css('display','none');
+          submit = true;
+    }
+
+    if ($('#password').val() == ''){
+      $('.password_error').css('display','block');
+      submit = false;
+    }
+    else if (  $('#password').val().length <= 8    ){
+      $('.password_length').text('Password should be more than 8');
+      $('.password_length').css('display','block');
+      submit = false;
+    }
+    else if(    $('#password').val().trim() != $('#repeatPassword').val().trim()    ){
+     
+      $('.re_password').css('display','block');
+      submit = false;
+    }
+    else{
+      $('.password_error').css('display','none');
+      submit = true;
+    }
+    console.log(submit,'================submit')
+    
+    if(submit){
+      $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url : "{% url 'register' %}",
+        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        data : {
+            'username' : $('#username').val(),
+            'email' : $('#email').val(),
+            'pasword' : $('#password').val(),
+            're_pasword' : $('#repeatPassword').val()
+        },
+        cache: false,
+        timeout: 600000,
+        success: function (res) {
+            console.log(res)
+            if(res.status == true){
+            setTimeout(function(){
+                window.location.href = "{% url 'login' %}" 
+            },2000)
+             
+            }else{
+            if (res.message){
+                alert(res.message);
+            }else{
+              alert(res.message);
+            }
+        }},
+    });
+
+
+    }
+
+
+
+
+
+
+
+
+})
+
+
+</script>
+
+{% endblock %}
+
+
+

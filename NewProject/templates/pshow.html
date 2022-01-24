@@ -1,0 +1,33 @@
+{% extends 'header.html' %}
+
+{% block content %}
+
+  <table>
+      <thead>
+          <th>Product Name</th>
+          <th>product desc</th>
+          <th>product img</th>
+          <th>product status</th>
+          <th>product price</th>
+      </thead>
+
+      <tbody>
+        {% for product in products %}
+      <tr>
+          <td>{{product.product_name}}</td>
+         
+          <td>{{product.product_desc}}</td> 
+          <td>{{product.product_img}}</td>
+          <td>{{product.product_status}}</td>
+          <td>{{product.product_price}}</td>
+        <td>  <a href="{% url 'edit' product.id  %}"><button type="button" class="btn btn-primary">EDIT</button></a></td> 
+        <td>  <button type="submit" class="btn btn-primary">DELETE</button></td> 
+        
+        
+      </tr>
+      {% endfor %}
+      </tbody>
+
+
+  </table>
+  {% endblock %}

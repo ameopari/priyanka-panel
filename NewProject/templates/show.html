@@ -1,0 +1,72 @@
+
+{% extends 'header.html' %}
+
+{% block content %}
+
+
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <a href="{%url 'create' %}" class=" forgot btn btn-success mt-3 " > Add More Students</a>
+    <h1 class="text-muted text-center mt-4"> Add Students</h1>
+   
+    {% for student in s %}
+    
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" value="{{student.name }}" name="name" id="name">
+    </div>
+    <div class="mb-3">
+      <label for="standard" class="form-label">Standard</label>
+      <input type="integer" class="form-control" value="{{student.standard }}" name="standard" id="standard">
+    </div>
+    <div class="mb-3">
+        <label for="roll_no" class="form-label">Roll_No</label>
+        <input type="integer" class="form-control" value="{{student.roll_no }}" name="roll_no" id="roll_no">
+      </div>
+      <a href="{% url 'upd' student.id  %}" class="btn btn-danger">update</a>
+      {% comment %} <a href="{% url 'delete' student.id  %}" class="btn btn-danger">Delete</a> {% endcomment %}
+      <button class=" delete btn btn-danger" type="button" id="{{student.id}}">Delete</button>
+     
+      {% endfor %} 
+  </form>
+
+  <script >
+    $(document).ready(()=>{
+        $(document).on('click','.delete',(e)=>{
+          let id = $(e.target).attr('id')
+          let url = `{%  url 'delete' %}` + id.toString();
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url : url,
+            headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            data : {
+                'username' : $('#username').val(),
+                'std' : $('#std').val(),
+                'roll' : $('#roll').val()
+            },
+            cache: false,
+            timeout: 600000,
+            success: function (res) {
+                console.log(res)
+                if(res.status == true){
+                setTimeout(function(){
+                    window.location.href = "{% url 'show' %}" 
+                },2000)
+                    toastr["success"](res.message)
+                }else{
+                if (res.message){
+                    toastr.error(res.message);
+                }else{
+                    toastr.error('There was an error while Deleting!');
+                }
+            }},
+        });
+      })
+    })
+    
+ 
+  </script>
+
+{% endblock %}

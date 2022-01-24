@@ -1,0 +1,50 @@
+{% extends 'header.html' %}
+
+{% block content %}
+<form action="" method="POST" enctype="multipart/form-data"
+>
+    {% csrf_token %}
+   <h1> Add product</h1>
+    <div class="mb-3">
+      <label for="product_name" class="form-label">product_name</label>
+      <input type="text" class="form-control" name="product_name" id="product_name" required>
+    </div>
+    <div class="mb-3">
+      <label for="product_desc" class="form-label">product_desc</label>
+      <input type="integer" class="form-control" name="product_desc" id="product_desc" required>
+    </div>
+    <div class="mb-3"> 
+        <label for="product_img" class="form-label">product_img</label>
+        <input type="file" class="form-control" name="product_img" id="product_img">
+      </div>
+    <div class="mb-3">
+        <label for="product_status" class="form-label">product_status</label>
+
+
+        
+        <div class="form-check">
+            <input class="form-check-input" name="status" type="radio" value="available" id="flexCheckDefault" checked>
+            <label class="form-check-label" for="flexCheckDefault">
+               Available
+            </label>
+          </div>
+          
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="status" value="not-available" id="flexCheckChecked" >
+            <label class="form-check-label" for="flexCheckChecked">
+                Not available
+            </label>
+          </div>
+        
+      </div>
+    <div class="mb-3">
+        <label for="product_price" class="form-label">product_price</label>
+        <input type="integer" class="form-control" name="product_price" id="product_price" required>
+      </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+      <a href="{% url 'listproduct' %}" class="btn btn-primary">Show Data</a>
+      
+  </form>
+
+  {% endblock %}

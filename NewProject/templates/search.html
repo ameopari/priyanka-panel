@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body class="container"> 
+    <form method="GET" action="{% url 'search' %}">
+        <!-- {% csrf_token %} -->
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Search By Email/Username</label>
+          <input name="q" type="text" class="form-control" id="email" aria-describedby="emailHelp">
+          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="mb-3">
+          <!-- <label for="exampleInputPassword1" class="form-label">USERNAME</label>
+          <input name="q" type="text" class="form-control" id="username"> -->
+          <button class="btn-btn-outline-secondary" type="submit">Search</button>
+        </div>
+      </form>
+      
+      <!-- <div class="p-2 border search-result bg-light shadow my-4 rounded">
+        <p class="m-0 p-0 mt-2 mb-2 border-bottom small p-4 text-muted">Your Search Results Will Be Displayed Here!</p> -->
+
+
+<h3 class="my-3">user data <a href="{% url 'search' %}" class="float-end btn btn-sm btn-success mt-2">Add more fields</a></h3>
+{% for message in messages %}
+<p class="text-success">{{msg}}</p>
+{% endfor %}
+<table class="table table-bordered">
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+    </tr>
+{% if data %} 
+
+     {% for user in data %} 
+    <tr>
+        <td class="username">{{user.username}}</td>
+        <td class="email">{{user.email}}</td>
+       
+      <td> <button type="button" class="btn btn-primary edit-user" data-userid="{{user.id}}">
+          Data Edit
+        </button>
+      </td>  
+    </tr>
+
+    {% endfor %}
+{%endif%}               
+</table>
+
+
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">User Data</h5>
+        <button type="button" class="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="{% url 'uedit' %}" method="POST">
+        {% csrf_token %}
+          <div class="modal-body">
+          
+          <input type="text" name="username" value="">
+          <input type="text" name="email" value="">
+          <input type="hidden" name="user_id" value="">
+          
+          
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary close">Close</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+      
+          </div>
+          </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <script>
+
+        // let users = {{ final_list | safe}};
+        // console.log(users)
+        // $(document).on('keyup','#email',()=>{
+        //     $('.individual').remove();
+        //     let email = $('#email').val();
+
+        //     users.filter((x)=>{ 
+        //         if (x.email.includes(email.toLowerCase()))
+        //         {
+        //             let result = `<div class="p-2 my-1 rounded individual">Username - <span class="fw-bold text-primary mx-2">${x.username}</span class="mx-2"><span>Email - </span><span class="fw-bold text-primary mx-2">${x.email}</span></div>`
+        //             $('.search-result').append(result);
+        //         }
+        //     })
+        // })
+
+
+        // $(document).on('keyup','#username',()=>{
+        //     $('.individual').remove();
+        //     let username = $('#username').val();
+
+        //     users.filter((x)=>{ 
+        //         if (x.username.includes(username.toLowerCase()))
+        //         {
+        //             let result = `<div class="p-2 my-1 rounded individual shadow border border-primary">Username - <span class="fw-bold text-primary mx-2">${x.username}</span class="mx-2"><span>Email - </span><span class="fw-bold btn btn-outline-primary btn-sm mx-2"><a href="mailto:${x.email}" class='text-decoration-none'>Send Mail</span></div>`
+        //             $('.search-result').append(result);
+        //         }
+        //     })
+        // })
+
+$('.edit-user').on('click', function(){
+  let user_id = $(this).attr('data-userid');
+  let username = $(this).parent().parent().find('.username').text();
+  let email = $(this).parent().parent().find('.email').text();
+
+  $('#exampleModalCenter').find("input[name='username']").val(username);
+  $('#exampleModalCenter').find("input[name='email']").val(email);
+  $('#exampleModalCenter').find("input[name='user_id']").val(user_id);
+  $('#exampleModalCenter').modal('show');
+
+})
+$('.close').on('click', function(){
+  $('#exampleModalCenter').modal('hide');
+})
+
+
+    </script>  
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script> 
+</body>
+</html>

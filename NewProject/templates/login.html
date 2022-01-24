@@ -1,0 +1,85 @@
+{% extends 'header.html' %}
+
+{% block content %}
+
+  {% if messages %}
+  {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} text-center" role="alert">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h5 class="text-muted text-center mt-4">LOGIN FORM</h5>
+        <form method="POST">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="form-group ">
+            <label for="">Email address</label>
+            <input type="email" class="email form-control"  name="email" id="email" autocomplete="off" aria-describedby="emailHelp" placeholder="Enter email"> 
+            <span class="email_error" style="display: none;" > enter email</span>
+            
+
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class=" password form-control"  autocomplete="off" id="password" name="password"  placeholder="Password">
+            <span class="password_error" style="display: none;" > enter email</span>
+          </div>
+      
+          <button type="submit" class=" login btn btn-primary mt-3 btn-success" >Login</button>
+          <a href="{%url 'forgot' %}" class=" forgot btn btn-primary mt-3 btn-danger" >Forgot Password</a>
+          <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
+            Login with google
+          </a>
+          <small class="mt-5 mx-4 p-2"> Create new account! <a class="mt-5 mx-4 p-2" href="{% url 'register' %}">Register</a> </small>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+
+<script>
+
+
+  console.log($('#loginForm').find('div:first'),'================hget_digit')
+  
+    $('.login').click(function(e){
+      let username = $('#username').val();
+      let email = $('#email').val();
+      let pw = $('#password').val();
+      let pw2 = $('#repeatpassword').val();
+      let canAjax = true;
+
+
+      // check if all fields are filled
+      $('.fields').each((i,e)=>{
+        if ($(e).val() == ""){
+          $(e).addClass('border border-danger');
+          $(e).parent().find('span').remove();
+          $(e).parent().append('<span>Please fill this field</span>')
+          canAjax = false;
+        }else{
+          $(e).removeClass('border border-danger');
+          $(e).parent().find('span').remove();
+        }
+      })
+      //end check
+      if (canAjax){
+        return true
+      }else{
+        return false
+      }
+
+})
+
+
+</script>
+{% endblock %}
